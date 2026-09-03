@@ -1,0 +1,34 @@
+name: ECMWF FFPI Kuwait
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 1,7,13,19 * * *"
+
+jobs:
+  update-map:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install numpy pandas xarray cfgrib eccodes matplotlib cartopy scipy requests
+
+      - name: Run ECMWF FFPI
+        run: python ecmwf_ffpi.py
+
+      - name: Save updated map
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Update ECMWF FFPI Kuwait map"
+          git push
