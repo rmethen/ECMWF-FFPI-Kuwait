@@ -20,7 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install numpy pandas xarray cfgrib eccodes matplotlib cartopy scipy requests
+          pip install numpy pandas xarray cfgrib eccodes matplotlib cartopy scipy requests ecmwf-opendata    
 
       - name: Run ECMWF FFPI
         run: python ecmwf_ffpi.py
