@@ -473,7 +473,81 @@ fig_gulf.text(
 plt.tight_layout()
 fig_gulf.savefig(GULF_MAP_FILE, dpi=180, bbox_inches="tight")
 plt.close(fig_gulf)
+# Kuwait-only map
+KUWAIT_ONLY_MAP_FILE = OUTDIR / "ECMWF_FFPI_KUWAIT_ONLY_LATEST.png"
 
+KUWAIT_LAT_MIN = 27.5
+KUWAIT_LAT_MAX = 30.8
+KUWAIT_LON_MIN = 46.5
+KUWAIT_LON_MAX = 49.5
+
+if lat[0] > lat[-1]:
+    kuwait_region = ffpi_clean.sel(
+        latitude=slice(KUWAIT_LAT_MAX, KUWAIT_LAT_MIN),
+        longitude=slice(KUWAIT_LON_MIN, KUWAIT_LON_MAX),
+    )
+else:
+    kuwait_region = ffpi_clean.sel(
+        latitude=slice(KUWAIT_LAT_MIN, KUWAIT_LAT_MAX),
+        longitude=slice(KUWAIT_LON_MIN, KUWAIT_LON_MAX),
+    )
+
+fig_kw = plt.figure(figsize=(10, 10))
+ax_kw = plt.axes(projection=ccrs.PlateCarree())
+
+ax_kw.set_extent(
+    [KUWAIT_LON_MIN, KUWAIT_LON_MAX, KUWAIT_LAT_MIN, KUWAIT_LAT_MAX],
+    crs=ccrs.PlateCarree()
+)
+
+ax_kw.add_feature(cfeature.LAND, facecolor="0.94")
+ax_kw.add_feature(cfeature.OCEAN, facecolor="0.90")
+ax_kw.add_feature(cfeature.COASTLINE, linewidth=0.9)
+ax_kw.add_feature(cfeature.BORDERS, linewidth=0.8)
+
+plot_kw = ax_kw.contourf(
+    kuwait_region.longitude,
+    kuwait_region.latitude,
+    kuwait_region,
+    levels=levels,
+    cmap="turbo",
+    extend="max",
+    transform=ccrs.PlateCarree(),
+)
+
+cb_kw = plt.colorbar(
+    plot_kw,
+    ax=ax_kw,
+    orientation="vertical",
+    pad=0.025,
+    shrink=0.85,
+)
+
+cb_kw.set_label("Experimental FFPI (0–100)", fontsize=11)
+
+ax_kw.gridlines(
+    draw_labels=True,
+    linewidth=0.4,
+    alpha=0.5,
+    linestyle="--",
+)
+
+plt.title(
+    "Unbiased Experimental FFPI – ECMWF | Kuwait\n"
+    f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
+    "Fixed physical thresholds • rainfall gate • isolated-noise removal",
+    fontsize=14,
+    weight="bold",
+)
+
+fig_kw.text(
+    0.99, 0.01, "© rmethen 2026",
+    ha="right", va="bottom", fontsize=9
+)
+
+plt.tight_layout()
+fig_kw.savefig(KUWAIT_ONLY_MAP_FILE, dpi=180, bbox_inches="tight")
+plt.close(fig_kw)
 
 
 
