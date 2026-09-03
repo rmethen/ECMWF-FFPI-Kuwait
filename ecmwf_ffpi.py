@@ -20,7 +20,7 @@ OUTDIR.mkdir(exist_ok=True)
 
 GRIB_FILE = OUTDIR / "ecmwf_ffpi_0_72h.grib2"
 MAP_FILE = OUTDIR / "ECMWF_FFPI_KUWAIT_LATEST.png"
-
+GULF_MAP_FILE = OUTDIR / "ECMWF_FFPI_GULF_LATEST.png"
 STEPS = list(range(3, 73, 3))
 
 
@@ -398,11 +398,12 @@ plt.savefig(
     dpi=180,
     bbox_inches="tight",
 )
-
+plt.savefig(GULF_MAP_FILE, dpi=180, bbox_inches="tight")
 plt.close()
 
 
 print("----------------------------------------")
 print("ECMWF FFPI completed successfully")
 print(f"Saved map: {MAP_FILE}")
+
 print("----------------------------------------")
