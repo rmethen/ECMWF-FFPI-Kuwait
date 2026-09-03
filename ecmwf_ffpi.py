@@ -398,8 +398,83 @@ plt.savefig(
     dpi=180,
     bbox_inches="tight",
 )
-plt.savefig(GULF_MAP_FILE, dpi=180, bbox_inches="tight")
+
 plt.close()
+# Gulf regional map
+GULF_LAT_MIN = 15.0
+GULF_LAT_MAX = 33.0
+GULF_LON_MIN = 34.0
+GULF_LON_MAX = 60.0
+
+if lat[0] > lat[-1]:
+    gulf_region = ffpi_clean.sel(
+        latitude=slice(GULF_LAT_MAX, GULF_LAT_MIN),
+        longitude=slice(GULF_LON_MIN, GULF_LON_MAX),
+    )
+else:
+    gulf_region = ffpi_clean.sel(
+        latitude=slice(GULF_LAT_MIN, GULF_LAT_MAX),
+        longitude=slice(GULF_LON_MIN, GULF_LON_MAX),
+    )
+
+fig_gulf = plt.figure(figsize=(13, 10))
+ax_gulf = plt.axes(projection=ccrs.PlateCarree())
+
+ax_gulf.set_extent(
+    [GULF_LON_MIN, GULF_LON_MAX, GULF_LAT_MIN, GULF_LAT_MAX],
+    crs=ccrs.PlateCarree()
+)
+
+ax_gulf.add_feature(cfeature.LAND, facecolor="0.94")
+ax_gulf.add_feature(cfeature.OCEAN, facecolor="0.90")
+ax_gulf.add_feature(cfeature.COASTLINE, linewidth=0.8)
+ax_gulf.add_feature(cfeature.BORDERS, linewidth=0.7)
+
+plot_gulf = ax_gulf.contourf(
+    gulf_region.longitude,
+    gulf_region.latitude,
+    gulf_region,
+    levels=levels,
+    cmap="turbo",
+    extend="max",
+    transform=ccrs.PlateCarree(),
+)
+
+cb_gulf = plt.colorbar(
+    plot_gulf,
+    ax=ax_gulf,
+    orientation="vertical",
+    pad=0.025,
+    shrink=0.85,
+)
+
+cb_gulf.set_label("Experimental FFPI (0–100)", fontsize=11)
+
+ax_gulf.gridlines(
+    draw_labels=True,
+    linewidth=0.4,
+    alpha=0.5,
+    linestyle="--",
+)
+
+plt.title(
+    "Unbiased Experimental FFPI – ECMWF | Gulf Region\n"
+    f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
+    "Fixed physical thresholds • rainfall gate • isolated-noise removal",
+    fontsize=14,
+    weight="bold",
+)
+
+fig_gulf.text(
+    0.99, 0.01, "© rmethen 2026",
+    ha="right", va="bottom", fontsize=9
+)
+
+plt.tight_layout()
+fig_gulf.savefig(GULF_MAP_FILE, dpi=180, bbox_inches="tight")
+plt.close(fig_gulf)
+
+
 
 
 print("----------------------------------------")
