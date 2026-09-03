@@ -390,7 +390,7 @@ plt.title(
     fontsize=14,
     weight="bold",
 )
-
+plt.figtext(0.99, 0.01, "© rmethen 2026", ha="right", va="bottom", fontsize=9)
 plt.tight_layout()
 
 plt.savefig(
