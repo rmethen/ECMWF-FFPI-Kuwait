@@ -22,7 +22,7 @@ GRIB_FILE = OUTDIR / "ecmwf_ffpi_0_72h.grib2"
 MAP_FILE = OUTDIR / "ECMWF_FFPI_KUWAIT_LATEST.png"
 GULF_MAP_FILE = OUTDIR / "ECMWF_FFPI_GULF_LATEST.png"
 STEPS = list(range(3, 73, 3))
-
+RAINFALL_MAP_FILE = OUTDIR / "ECMWF_RAINFALL_GULF_LATEST.png"
 
 # ---------------------------------------------------------
 # 1. Download latest ECMWF IFS open data
@@ -89,7 +89,17 @@ if "step" in tp_mm.dims:
     tp72 = tp_mm.max("step")
 else:
     tp72 = tp_mm
+# Normal rainfall diagnostics
+if "step" in tp_mm.dims:
+    rain_3h = (tp_mm - tp_mm.shift(step=1, fill_value=0)).clip(min=0)
+    max_rain_3h = rain_3h.max("step")
 
+    rain_24h = tp_mm.isel(step=min(7, tp_mm.sizes["step"] - 1))
+    rain_72h = tp_mm.isel(step=-1)
+else:
+    max_rain_3h = tp_mm
+    rain_24h = tp_mm
+    rain_72h = tp_mm
 
 # ---------------------------------------------------------
 # 4. Read precipitation rate
@@ -124,6 +134,7 @@ runoff = ds_ro[ro_name]
 
 # runoff is metres water equivalent
 runoff_mm = runoff * 1000.0
+
 
 if "step" in runoff_mm.dims:
     runoff72 = runoff_mm.max("step")
