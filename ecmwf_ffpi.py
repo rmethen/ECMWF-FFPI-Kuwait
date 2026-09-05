@@ -585,3 +585,38 @@ print("ECMWF FFPI completed successfully")
 print(f"Saved map: {MAP_FILE}")
 
 print("----------------------------------------")
+# ============================================================
+# GEFS CPC – 24h precipitation probability > 5 mm
+# Day 1 / Day 2 / Day 3 – Central Asia / Arabia sector
+# Independent comparison product; does not affect ECMWF FFPI
+# ============================================================
+
+from urllib.request import Request, urlopen
+
+GEFS_CPC_URLS = {
+    "day1": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/fcsts_casia/gefs.t18z.day1_24h_precip_tot_gt_5mm.casia.gif",
+    "day2": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/fcsts_casia/gefs.t18z.day2_24h_precip_tot_gt_5mm.casia.gif",
+    "day3": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/fcsts_casia/gefs.t18z.day3_24h_precip_tot_gt_5mm.casia.gif",
+}
+
+print("Downloading GEFS CPC >5 mm / 24h probability maps...")
+
+for day, url in GEFS_CPC_URLS.items():
+    try:
+        req = Request(
+            url,
+            headers={"User-Agent": "Mozilla/5.0"}
+        )
+
+        with urlopen(req, timeout=60) as response:
+            image_data = response.read()
+
+        output_file = OUTDIR / f"gefs_cpc_{day}_precip_gt5mm.gif"
+        output_file.write_bytes(image_data)
+
+        print(f"Saved GEFS CPC {day}: {output_file}")
+
+    except Exception as exc:
+        print(f"WARNING: Could not download GEFS CPC {day}: {exc}")
+
+print("GEFS CPC comparison maps completed.")
