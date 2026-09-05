@@ -413,9 +413,9 @@ plt.savefig(
 plt.close()
 # Gulf regional map
 GULF_LAT_MIN = 5.0
-GULF_LAT_MAX = 38.0
+GULF_LAT_MAX = 45.0
 GULF_LON_MIN = 20.0
-GULF_LON_MAX = 60.0
+GULF_LON_MAX = 80.0
 
 if lat[0] > lat[-1]:
     gulf_region = ffpi_clean.sel(
