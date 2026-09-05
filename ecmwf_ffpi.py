@@ -594,9 +594,9 @@ print("----------------------------------------")
 from urllib.request import Request, urlopen
 
 GEFS_CPC_URLS = {
-    "day1": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/fcsts_casia/gefs.t18z.day1_24h_precip_tot_gt_5mm.casia.gif",
-    "day2": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/fcsts_casia/gefs.t18z.day2_24h_precip_tot_gt_5mm.casia.gif",
-    "day3": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/fcsts_casia/gefs.t18z.day3_24h_precip_tot_gt_5mm.casia.gif",
+    "day1": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/gefs.t18z.day1_24h_precip_tot_gt_5mm.casia.gif",
+    "day2": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/gefs.t18z.day2_24h_precip_tot_gt_5mm.casia.gif",
+    "day3": "https://www.cpc.ncep.noaa.gov/products/international/cpci/data/18/gefs.t18z.day3_24h_precip_tot_gt_5mm.casia.gif",
 }
 
 print("Downloading GEFS CPC >5 mm / 24h probability maps...")
