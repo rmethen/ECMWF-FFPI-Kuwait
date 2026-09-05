@@ -23,6 +23,24 @@ MAP_FILE = OUTDIR / "ECMWF_FFPI_KUWAIT_LATEST.png"
 GULF_MAP_FILE = OUTDIR / "ECMWF_FFPI_GULF_LATEST.png"
 STEPS = list(range(3, 73, 3))
 RAINFALL_MAP_FILE = OUTDIR / "ECMWF_RAINFALL_GULF_LATEST.png"
+# JMA ensemble probability maps: 24h precipitation > 24 mm
+JMA_URL_24 = "https://eps.kishou.go.jp/EPSMRFA/Products/Prob/JMA/latest00/JMAprobmap_RAIN24_gt24mm_as25_ft24.png"
+JMA_URL_48 = "https://eps.kishou.go.jp/EPSMRFA/Products/Prob/JMA/latest00/JMAprobmap_RAIN24_gt24mm_as25_ft48.png"
+JMA_URL_72 = "https://eps.kishou.go.jp/EPSMRFA/Products/Prob/JMA/latest00/JMAprobmap_RAIN24_gt24mm_as25_ft72.png"
+
+JMA_FILE_24 = OUTDIR / "JMA_RAIN24_GT24MM_FT24.png"
+JMA_FILE_48 = OUTDIR / "JMA_RAIN24_GT24MM_FT48.png"
+JMA_FILE_72 = OUTDIR / "JMA_RAIN24_GT24MM_FT72.png"
+# Download JMA ensemble probability maps
+import urllib.request
+
+for jma_url, jma_file in [
+    (JMA_URL_24, JMA_FILE_24),
+    (JMA_URL_48, JMA_FILE_48),
+    (JMA_URL_72, JMA_FILE_72),
+]:
+    print(f"Downloading JMA: {jma_url}")
+    urllib.request.urlretrieve(jma_url, jma_file)
 
 # ---------------------------------------------------------
 # 1. Download latest ECMWF IFS open data
