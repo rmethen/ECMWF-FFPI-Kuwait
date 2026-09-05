@@ -412,9 +412,9 @@ plt.savefig(
 
 plt.close()
 # Gulf regional map
-GULF_LAT_MIN = 15.0
-GULF_LAT_MAX = 33.0
-GULF_LON_MIN = 34.0
+GULF_LAT_MIN = 5.0
+GULF_LAT_MAX = 38.0
+GULF_LON_MIN = 20.0
 GULF_LON_MAX = 60.0
 
 if lat[0] > lat[-1]:
