@@ -1,0 +1,35 @@
+name: ECMWF FFPI Mountain V2 Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  mountain-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install numpy pandas xarray cfgrib eccodes matplotlib cartopy scipy ecmwf-opendata
+
+      - name: Run ECMWF FFPI Mountain V2
+        run: python ecmwf_ffpi_mountain_v2.py
+
+      - name: Save updated map
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add output/
+          git diff --cached --quiet || git commit -m "Update ECMWF FFPI Mountain V2 test map"
+          git push
