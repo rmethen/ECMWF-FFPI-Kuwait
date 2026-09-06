@@ -1,0 +1,7 @@
+ECMWF Mountain V3 FINAL - North Oman Diagnostic
+IFS Run: 06 Sep 2026 12 UTC
+Box: 22.0-24.5N, 56.0-59.5E
+Max 0-72h precipitation: 6.77 mm
+Max precipitation rate: 3.30 mm/h
+Max runoff: 0.37 mm
+Max cleaned FFPI: 0.00
