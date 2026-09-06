@@ -1,0 +1,7 @@
+ECMWF Experimental Hail Potential Index V1
+IFS Run: 06 Sep 2026 12 UTC
+Forecast: +3 to +72 h
+Max HPI in Middle East domain: 82.5
+Weights: MUCAPE 35%, HGL depth 25%, shear proxy 20%, freezing level 10%, HGL RH 10%
+Deep-layer shear uses 1000-500 hPa as a ~0-6 km proxy.
+Experimental product: not a direct hail-size forecast.
