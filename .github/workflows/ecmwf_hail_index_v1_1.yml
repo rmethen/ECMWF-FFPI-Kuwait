@@ -1,0 +1,34 @@
+name: ECMWF Hail Index V1.1 Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  hail-v1-1-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install numpy xarray cfgrib eccodes matplotlib cartopy scipy ecmwf-opendata
+      - name: Run ECMWF Hail Index V1
+        run: python ecmwf_hail_index_v1.py
+      - name: Save hail map and diagnostics only
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f output/ecmwf_hail_v1_pressure.grib2
+          rm -f output/ecmwf_hail_v1_surface.grib2
+          git add output/ECMWF_HAIL_INDEX_MIDDLE_EAST_LATEST.png
+          git add output/ECMWF_HAIL_INDEX_DIAGNOSTIC.txt
+          git diff --cached --quiet || git commit -m "Update ECMWF Hail Index V1.1"
+          git push
