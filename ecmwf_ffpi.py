@@ -502,6 +502,81 @@ fig_gulf.text(
 plt.tight_layout()
 fig_gulf.savefig(GULF_MAP_FILE, dpi=180, bbox_inches="tight")
 plt.close(fig_gulf)
+# Middle East regional map
+MIDDLE_EAST_LAT_MIN = 5.0
+MIDDLE_EAST_LAT_MAX = 45.0
+MIDDLE_EAST_LON_MIN = 25.0
+MIDDLE_EAST_LON_MAX = 75.0
+
+if lat[0] > lat[-1]:
+    middle_east_region = ffpi_clean.sel(
+        latitude=slice(MIDDLE_EAST_LAT_MAX, MIDDLE_EAST_LAT_MIN),
+        longitude=slice(MIDDLE_EAST_LON_MIN, MIDDLE_EAST_LON_MAX),
+    )
+else:
+    middle_east_region = ffpi_clean.sel(
+        latitude=slice(MIDDLE_EAST_LAT_MIN, MIDDLE_EAST_LAT_MAX),
+        longitude=slice(MIDDLE_EAST_LON_MIN, MIDDLE_EAST_LON_MAX),
+    )
+
+fig_me = plt.figure(figsize=(13, 10))
+ax_me = plt.axes(projection=ccrs.PlateCarree())
+
+ax_me.set_extent(
+    [MIDDLE_EAST_LON_MIN, MIDDLE_EAST_LON_MAX,
+     MIDDLE_EAST_LAT_MIN, MIDDLE_EAST_LAT_MAX],
+    crs=ccrs.PlateCarree()
+)
+
+ax_me.add_feature(cfeature.LAND, facecolor="0.94")
+ax_me.add_feature(cfeature.OCEAN, facecolor="0.90")
+ax_me.add_feature(cfeature.COASTLINE, linewidth=0.8)
+ax_me.add_feature(cfeature.BORDERS, linewidth=0.7)
+
+plot_me = ax_me.contourf(
+    middle_east_region.longitude,
+    middle_east_region.latitude,
+    middle_east_region,
+    levels=levels,
+    cmap="turbo",
+    extend="max",
+    transform=ccrs.PlateCarree(),
+)
+
+cb_me = plt.colorbar(
+    plot_me,
+    ax=ax_me,
+    orientation="vertical",
+    pad=0.025,
+    shrink=0.85,
+)
+
+cb_me.set_label("Experimental FFPI (0–100)", fontsize=11)
+
+ax_me.gridlines(
+    draw_labels=True,
+    linewidth=0.4,
+    alpha=0.5,
+    linestyle="--",
+)
+
+plt.title(
+    "Unbiased Experimental FFPI – ECMWF | Middle East\n"
+    f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
+    "Fixed physical thresholds • rainfall gate • isolated-noise removal",
+    fontsize=14,
+    weight="bold",
+)
+
+fig_me.text(
+    0.99, 0.01, "© rmethen 2026",
+    ha="right", va="bottom", fontsize=9
+)
+
+plt.tight_layout()
+fig_me.savefig(MIDDLE_EAST_MAP_FILE, dpi=180, bbox_inches="tight")
+plt.close(fig_me)
+
 # Kuwait-only map
 KUWAIT_ONLY_MAP_FILE = OUTDIR / "ECMWF_FFPI_KUWAIT_ONLY_LATEST.png"
 
