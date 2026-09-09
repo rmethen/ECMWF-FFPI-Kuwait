@@ -609,6 +609,28 @@ ax_kw.add_feature(cfeature.LAND, facecolor="0.94")
 ax_kw.add_feature(cfeature.OCEAN, facecolor="0.90")
 ax_kw.add_feature(cfeature.COASTLINE, linewidth=0.9)
 ax_kw.add_feature(cfeature.BORDERS, linewidth=0.8)
+# Reference cities
+cities = {
+    "Kuwait City": (47.98, 29.38),
+    "Basra": (47.78, 30.51),
+    "Hafar Al Batin": (45.96, 28.43),
+    "Al Khafji": (48.49, 28.44),
+}
+
+for name, (lon_city, lat_city) in cities.items():
+    ax_kw.plot(
+        lon_city, lat_city,
+        marker="o",
+        markersize=4,
+        transform=ccrs.PlateCarree()
+    )
+    ax_kw.text(
+        lon_city + 0.08,
+        lat_city + 0.05,
+        name,
+        fontsize=9,
+        transform=ccrs.PlateCarree()
+    )
 
 plot_kw = ax_kw.contourf(
     kuwait_region.longitude,
