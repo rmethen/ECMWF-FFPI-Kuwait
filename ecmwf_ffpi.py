@@ -581,10 +581,10 @@ plt.close(fig_me)
 # Kuwait-only map
 KUWAIT_ONLY_MAP_FILE = OUTDIR / "ECMWF_FFPI_KUWAIT_ONLY_LATEST.png"
 
-KUWAIT_LAT_MIN = 27.5
-KUWAIT_LAT_MAX = 30.8
-KUWAIT_LON_MIN = 46.5
-KUWAIT_LON_MAX = 49.5
+KUWAIT_LAT_MIN = 26.0
+KUWAIT_LAT_MAX = 31.5
+KUWAIT_LON_MIN = 44.5
+KUWAIT_LON_MAX = 51.5
 
 if lat[0] > lat[-1]:
     kuwait_region = ffpi_clean.sel(
