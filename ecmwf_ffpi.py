@@ -21,6 +21,7 @@ OUTDIR.mkdir(exist_ok=True)
 GRIB_FILE = OUTDIR / "ecmwf_ffpi_0_72h.grib2"
 MAP_FILE = OUTDIR / "ECMWF_FFPI_KUWAIT_LATEST.png"
 GULF_MAP_FILE = OUTDIR / "ECMWF_FFPI_GULF_LATEST.png"
+MIDDLE_EAST_MAP_FILE = OUTDIR / "ECMWF_FFPI_MIDDLE_EAST_LATEST.png"
 STEPS = list(range(3, 73, 3))
 RAINFALL_MAP_FILE = OUTDIR / "ECMWF_RAINFALL_GULF_LATEST.png"
 # JMA ensemble probability maps: 24h precipitation > 24 mm
