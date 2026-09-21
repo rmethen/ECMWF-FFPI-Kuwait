@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
@@ -137,8 +138,19 @@ rain_rate_mmh = rain_rate * 3600.0
 
 if "step" in rain_rate_mmh.dims:
     max_rate = rain_rate_mmh.max("step")
+    # Peak forcing time for the flash-flood diagnostic.  Use the strongest
+    # domain-wide instantaneous rainfall-rate signal in the forecast window.
+    spatial_dims = [d for d in ("latitude", "longitude") if d in rain_rate_mmh.dims]
+    peak_rate_by_step = rain_rate_mmh.max(spatial_dims, skipna=True)
+    peak_index = int(peak_rate_by_step.argmax("step").item())
+    peak_step_value = rain_rate_mmh["step"].isel(step=peak_index).values
+    peak_hour = int(peak_step_value / np.timedelta64(1, "h"))
+    peak_valid_time = run_time + timedelta(hours=peak_hour)
+    peak_valid_text = peak_valid_time.strftime("%d %b %Y %H UTC")
 else:
     max_rate = rain_rate_mmh
+    peak_hour = 0
+    peak_valid_text = run_time.strftime("%d %b %Y %H UTC")
 
 
 # ---------------------------------------------------------
@@ -416,7 +428,7 @@ run_text = run_time.strftime("%d %b %Y %H UTC")
 plt.title(
     "Unbiased Experimental FFPI – ECMWF\n"
     f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
-    "Fixed physical thresholds • rainfall gate • isolated-noise removal",
+    f"Flash Flood • Peak hour: +{peak_hour} h • Valid: {peak_valid_text}",
     fontsize=14,
     weight="bold",
 )
@@ -490,7 +502,7 @@ ax_gulf.gridlines(
 plt.title(
     "Unbiased Experimental FFPI – ECMWF | Gulf Region\n"
     f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
-    "Fixed physical thresholds • rainfall gate • isolated-noise removal",
+    f"Flash Flood • Peak hour: +{peak_hour} h • Valid: {peak_valid_text}",
     fontsize=14,
     weight="bold",
 )
@@ -564,7 +576,7 @@ ax_me.gridlines(
 plt.title(
     "Unbiased Experimental FFPI – ECMWF | Middle East\n"
     f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
-    "Fixed physical thresholds • rainfall gate • isolated-noise removal",
+    f"Flash Flood • Peak hour: +{peak_hour} h • Valid: {peak_valid_text}",
     fontsize=14,
     weight="bold",
 )
@@ -662,7 +674,7 @@ ax_kw.gridlines(
 plt.title(
     "Unbiased Experimental FFPI – ECMWF | Kuwait\n"
     f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
-    "Fixed physical thresholds • rainfall gate • isolated-noise removal",
+    f"Flash Flood • Peak hour: +{peak_hour} h • Valid: {peak_valid_text}",
     fontsize=14,
     weight="bold",
 )

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="refresh" content="300">
+  <title>خرائط ECMWF التجريبية للطقس الشديد</title>
+  <style>
+    :root{color-scheme:light;--ink:#172033;--muted:#607086;--line:#d9e2ec;--blue:#1769aa}
+    *{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}
+    header{padding:24px 16px 18px;text-align:center;border-bottom:1px solid var(--line)}
+    h1{margin:0 0 8px;font-size:clamp(24px,5vw,38px)}header p{margin:0;color:var(--muted)}
+    main{width:min(1180px,100%);margin:auto;padding:18px 12px 42px}
+    article{margin:0 0 28px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 5px 18px #15324b12}
+    h2{margin:0;padding:15px 16px;background:#f7fafd;font-size:clamp(20px,4vw,28px);border-bottom:1px solid var(--line)}
+    figure{margin:0;padding:10px}img{display:block;width:100%;height:auto;background:#fff;border-radius:8px}
+    figcaption{padding:10px 6px 4px;color:var(--muted);font-size:14px;text-align:center}
+    .en{direction:ltr;unicode-bidi:embed}.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#eaf4fc;color:var(--blue);font-weight:700}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>خرائط الطقس الشديد — ECMWF</h1>
+    <p>تُحدّث الصفحة تلقائيًا كل 5 دقائق، وتظهر على الخرائط بداية التشغيل ووقت الذروة.</p>
+  </header>
+  <main>
+    <article>
+      <h2>مؤشر السيول المفاجئة <span class="badge en">Flash Flood</span></h2>
+      <figure>
+        <img data-src="https://raw.githubusercontent.com/rmethen/ECMWF-FFPI-Kuwait/main/output/ECMWF_FFPI_MIDDLE_EAST_LATEST.png" alt="ECMWF Flash Flood Potential Index">
+        <figcaption>مؤشر تجريبي لاحتمال السيول المفاجئة — وليس معدل هطول فقط.</figcaption>
+      </figure>
+    </article>
+    <article>
+      <h2>احتمال البَرَد الكبير <span class="badge en">Large Hail</span></h2>
+      <figure>
+        <img data-src="https://raw.githubusercontent.com/rmethen/ECMWF-HAIL-Middle-East/main/output/ECMWF_HAIL_INDEX_MIDDLE_EAST_LATEST.png" alt="ECMWF Large Hail Potential">
+        <figcaption>يتضمن ساعة الذروة وأعلى قيمة، ويستفيد من WBZ والقصّ الرأسي وحركة 700 و500 hPa.</figcaption>
+      </figure>
+    </article>
+    <article>
+      <h2>احتمال العواصف الرعدية والبروق <span class="badge en">Thunderstorm &amp; Lightning</span></h2>
+      <figure>
+        <img data-src="https://raw.githubusercontent.com/rmethen/ECMWF-HAIL-Middle-East/main/output/ECMWF_THUNDERSTORM_LIGHTNING_POTENTIAL_LATEST.png" alt="ECMWF Thunderstorm and Lightning Potential">
+        <figcaption>مؤشر تجريبي للعواصف الرعدية والبروق، وليس كثافة بروق فعلية.</figcaption>
+      </figure>
+    </article>
+  </main>
+  <script>
+    const stamp=Date.now();
+    document.querySelectorAll('img[data-src]').forEach(img=>img.src=img.dataset.src+'?v='+stamp);
+  </script>
+</body>
+</html>
