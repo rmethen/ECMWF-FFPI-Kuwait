@@ -427,8 +427,8 @@ run_text = run_time.strftime("%d %b %Y %H UTC")
 
 plt.title(
     "Unbiased Experimental FFPI – ECMWF\n"
-    f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
-    f"Flash Flood • Peak hour: +{peak_hour} h • Valid: {peak_valid_text}",
+    f"IFS Run: {run_text} | Combined forecast window: +3 to +72 h\n"
+    f"Domain-wide peak rain rate: +{peak_hour} h ({peak_valid_text})",
     fontsize=14,
     weight="bold",
 )
@@ -501,8 +501,8 @@ ax_gulf.gridlines(
 
 plt.title(
     "Unbiased Experimental FFPI – ECMWF | Gulf Region\n"
-    f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
-    f"Flash Flood • Peak hour: +{peak_hour} h • Valid: {peak_valid_text}",
+    f"IFS Run: {run_text} | Combined forecast window: +3 to +72 h\n"
+    f"Domain-wide peak rain rate: +{peak_hour} h ({peak_valid_text})",
     fontsize=14,
     weight="bold",
 )
@@ -575,8 +575,8 @@ ax_me.gridlines(
 
 plt.title(
     "Unbiased Experimental FFPI – ECMWF | Middle East\n"
-    f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
-    f"Flash Flood • Peak hour: +{peak_hour} h • Valid: {peak_valid_text}",
+    f"IFS Run: {run_text} | Combined forecast window: +3 to +72 h\n"
+    f"Domain-wide peak rain rate: +{peak_hour} h ({peak_valid_text})",
     fontsize=14,
     weight="bold",
 )
@@ -673,8 +673,8 @@ ax_kw.gridlines(
 
 plt.title(
     "Unbiased Experimental FFPI – ECMWF | Kuwait\n"
-    f"IFS Run: {run_text} | Forecast: +3 to +72 h\n"
-    f"Flash Flood • Peak hour: +{peak_hour} h • Valid: {peak_valid_text}",
+    f"IFS Run: {run_text} | Combined forecast window: +3 to +72 h\n"
+    f"Domain-wide peak rain rate: +{peak_hour} h ({peak_valid_text})",
     fontsize=14,
     weight="bold",
 )
