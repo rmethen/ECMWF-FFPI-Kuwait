@@ -33,17 +33,6 @@ JMA_URL_72 = "https://eps.kishou.go.jp/EPSMRFA/Products/Prob/JMA/latest00/JMApro
 JMA_FILE_24 = OUTDIR / "JMA_RAIN24_GT24MM_FT24.png"
 JMA_FILE_48 = OUTDIR / "JMA_RAIN24_GT24MM_FT48.png"
 JMA_FILE_72 = OUTDIR / "JMA_RAIN24_GT24MM_FT72.png"
-# Download JMA ensemble probability maps
-import urllib.request
-
-for jma_url, jma_file in [
-    (JMA_URL_24, JMA_FILE_24),
-    (JMA_URL_48, JMA_FILE_48),
-    (JMA_URL_72, JMA_FILE_72),
-]:
-    print(f"Downloading JMA: {jma_url}")
-    urllib.request.urlretrieve(jma_url, jma_file)
-
 # ---------------------------------------------------------
 # 1. Download latest ECMWF IFS open data
 # ---------------------------------------------------------
@@ -692,6 +681,17 @@ plt.close(fig_kw)
 
 print("----------------------------------------")
 print("ECMWF FFPI completed successfully")
+
+# JMA comparison maps are optional and run only after the ECMWF FFPI maps exist.
+from jma_maps import download_jma_maps
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+download_jma_maps([
+    (JMA_URL_24, JMA_FILE_24),
+    (JMA_URL_48, JMA_FILE_48),
+    (JMA_URL_72, JMA_FILE_72),
+])
 print(f"Saved map: {MAP_FILE}")
 
 print("----------------------------------------")
@@ -730,3 +730,4 @@ for day, url in GEFS_CPC_URLS.items():
         print(f"WARNING: Could not download GEFS CPC {day}: {exc}")
 
 print("GEFS CPC comparison maps completed.")
+
