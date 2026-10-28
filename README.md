@@ -10,6 +10,15 @@ NOMADS and plots simulated composite reflectivity (REFC), forecast rain rate
 These are forecast fields for comparison with satellite observations; the
 reflectivity is not measured radar data. A separate scheduled workflow updates
 this image without changing the ECMWF FFPI calculation.
+
+## GFS experimental flash flood potential
+
+`gfs_ffpi.py` independently computes the same four-component FFPI formula
+(rain rate 40%, 72-hour accumulated rain 30%, runoff 20%, surface soil water
+10%) using GFS raw fields. Six-hour, non-overlapping accumulation windows
+cover +6 to +72 hours. The score retains the ECMWF thresholds and rain gate,
+but the models and output timing differ; values are not calibrated probabilities.
+Maps for Kuwait and the Middle East are refreshed in a separate workflow.
 ## GEFS CPC – 24h Precipitation Probability > 5 mm
 
 ### Day 1
