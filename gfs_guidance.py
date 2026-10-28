@@ -51,15 +51,18 @@ def download_latest():
 def field(path, short_name, level_type):
     ds = xr.open_dataset(path, engine="cfgrib", backend_kwargs={
         "filter_by_keys": {"shortName": short_name,
-                           "typeOfLevel": level_type}, "indexpath": ""})
+                           "typeOfLevel": level_type,
+                           "stepType": "instant"}, "indexpath": ""})
     return ds[list(ds.data_vars)[0]]
 
 
 def main():
     cycle, path = download_latest()
-    refc = field(path, "refc", "entireAtmosphere")
+    refc = field(path, "refc", "atmosphere")
     prate = field(path, "prate", "surface") * 3600  # kg m-2 s-1 -> mm/h
-    rh = field(path, "r", "isobaricInhPa").sel(isobaricInhPa=700)
+    rh = field(path, "r", "isobaricInhPa")
+    if int(rh.isobaricInhPa.item()) != 700:
+        raise ValueError("Expected 700 hPa relative humidity")
 
     fig, axes = plt.subplots(1, 3, figsize=(16, 5),
                              subplot_kw={"projection": ccrs.PlateCarree()})
