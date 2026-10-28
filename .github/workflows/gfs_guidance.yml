@@ -1,6 +1,8 @@
 name: GFS guidance Kuwait
 
 on:
+  push:
+    branches: [add-gfs-raw-guidance]
   workflow_dispatch:
   schedule:
     - cron: "45 1,7,13,19 * * *"
