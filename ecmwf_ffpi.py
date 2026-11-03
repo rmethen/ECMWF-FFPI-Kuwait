@@ -8,6 +8,7 @@ import cartopy.feature as cfeature
 
 from scipy.ndimage import label
 from ecmwf.opendata import Client
+from ffpi_cycle import is_newer_cycle, read_previous_cycle, utc_naive
 
 
 # =========================================================
@@ -20,6 +21,7 @@ OUTDIR = Path("output")
 OUTDIR.mkdir(exist_ok=True)
 
 GRIB_FILE = OUTDIR / "ecmwf_ffpi_0_72h.grib2"
+LAST_CYCLE_FILE = OUTDIR / "ECMWF_FFPI_LAST_RUN_UTC.txt"
 MAP_FILE = OUTDIR / "ECMWF_FFPI_KUWAIT_LATEST.png"
 GULF_MAP_FILE = OUTDIR / "ECMWF_FFPI_GULF_LATEST.png"
 MIDDLE_EAST_MAP_FILE = OUTDIR / "ECMWF_FFPI_MIDDLE_EAST_LATEST.png"
@@ -45,6 +47,21 @@ client = Client(
     resol="0p25",
 )
 
+# Inspect the complete +72h endpoint before transferring ~50 MB of GRIB.
+# A new calendar day alone does not mean ECMWF has released a newer cycle.
+latest_cycle = utc_naive(client.latest(
+    type="fc",
+    stream="oper",
+    step=72,
+    param=["tp", "tprate", "ro", "vsw"],
+))
+previous_cycle = read_previous_cycle(LAST_CYCLE_FILE)
+print(f"Newest available IFS +72h cycle: {latest_cycle:%Y-%m-%d %HZ}", flush=True)
+print(f"Previously published cycle: {previous_cycle}", flush=True)
+if not is_newer_cycle(latest_cycle, previous_cycle):
+    print("Same/older cycle: keep published maps unchanged, skip download.", flush=True)
+    raise SystemExit(0)
+
 result = client.retrieve(
     type="fc",
     stream="oper",
@@ -53,7 +70,11 @@ result = client.retrieve(
     target=str(GRIB_FILE),
 )
 
-run_time = result.datetime
+run_time = utc_naive(result.datetime)
+if not is_newer_cycle(run_time, previous_cycle):
+    raise RuntimeError("Download returned an older cycle; refusing to overwrite published maps.")
+if run_time != latest_cycle:
+    print(f"NOTICE: latest probe was {latest_cycle}, actual data cycle {run_time}", flush=True)
 
 print(f"ECMWF run: {run_time}")
 print("Download completed.")
@@ -730,4 +751,8 @@ for day, url in GEFS_CPC_URLS.items():
         print(f"WARNING: Could not download GEFS CPC {day}: {exc}")
 
 print("GEFS CPC comparison maps completed.")
+
+# Only advance the marker after all required FFPI maps were saved.
+LAST_CYCLE_FILE.write_text(run_time.isoformat() + "\n", encoding="utf-8")
+print(f"Published ECMWF cycle: {run_time:%Y-%m-%d %HZ}", flush=True)
 
