@@ -2,6 +2,17 @@ name: ECMWF FFPI Kuwait
 
 on:
   workflow_dispatch:
+  # Run once when diagnostic code lands on main; only code changes trigger this.
+  # Also smoke-test the feature branch without pushing generated maps.
+  push:
+    branches:
+      - main
+      - feature/ffpi-diagnostic-72h-20261103
+    paths:
+      - ecmwf_ffpi.py
+      - ffpi_diagnostics.py
+      - tests/test_ffpi_diagnostics.py
+      - .github/workflows/ecmwf_ffpi.yml
   # ECMWF Open Data typically follows a 7-9h dissemination lag.
   # Try after release, then retry one hour later if the cycle is late.
   schedule:
@@ -34,6 +45,7 @@ jobs:
         run: python ecmwf_ffpi.py
 
       - name: Save updated map
+        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
