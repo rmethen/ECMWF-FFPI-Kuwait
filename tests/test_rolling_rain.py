@@ -31,7 +31,7 @@ class RollingRainTests(unittest.TestCase):
         history={0:np.zeros((2,2))}
         for previous,source,end,value,expected in (
             (0,0,3,2,2),(3,0,6,7,5),(6,6,9,3,3),
-            (9,0,12,14,4),(12,9,15,8,5)):
+            (9,0,12,14,4),(12,9,15,9,5)):
             segment=advance_gfs_cumulative(
                 history,previous,source,end,np.ones((2,2))*value)
             np.testing.assert_allclose(segment,expected)
