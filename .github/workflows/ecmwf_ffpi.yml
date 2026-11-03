@@ -2,15 +2,6 @@ name: ECMWF FFPI Kuwait
 
 on:
   workflow_dispatch:
-  # Temporary branch-only smoke test; removed before proposing merge.
-  push:
-    branches:
-      - test/ffpi-freshness-20261103
-    paths:
-      - ecmwf_ffpi.py
-      - ffpi_cycle.py
-      - tests/test_ffpi_cycle.py
-      - .github/workflows/ecmwf_ffpi.yml
   # ECMWF Open Data typically follows a 7-9h dissemination lag.
   # Try after release, then retry one hour later if the cycle is late.
   schedule:
