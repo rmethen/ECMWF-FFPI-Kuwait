@@ -13,10 +13,7 @@ on:
       - tests/test_nov_rain_comparison.py
       - index.html
       - .github/workflows/ifs_gfs_nov10_11.yml
-  schedule:
-    # 00/12Z ECMWF cycles become available after dissemination;
-    # 01, 07, 13 and 19 UTC attempts pick a complete common model run.
-    - cron: '19 1,7,13,19 * * *'
+  # The fixed 10–11 November experiment is now archived; no daily schedule.
   workflow_dispatch:
 
 concurrency:
