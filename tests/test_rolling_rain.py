@@ -7,6 +7,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import numpy as np
+from gfs_apcp_rolling import advance_gfs_cumulative
 from rolling_ifs_gfs_rain import (
     DAYS,MAX_LEAD,PREFIX,valid_cycle,candidate_cycles,endpoints,
     gfs_intervals,same_window_details,build_status,main,
@@ -16,6 +17,33 @@ from rolling_ifs_gfs_rain import (
 class RollingRainTests(unittest.TestCase):
     def setUp(self):
         self.cycle=datetime(2026,11,3,0,tzinfo=timezone.utc)
+
+    def test_gfs_apcp_0_to_6_reconstructs_three_to_six(self):
+        # Forecast +3 encodes 0-3 mm, +6 encodes 0-6 mm.
+        history={0:np.zeros((2,2))}
+        first=advance_gfs_cumulative(history,0,0,3,np.ones((2,2))*4.)
+        second=advance_gfs_cumulative(history,3,0,6,np.ones((2,2))*10.)
+        np.testing.assert_allclose(first,4.)
+        np.testing.assert_allclose(second,6.)
+        np.testing.assert_allclose(history[6],10.)
+
+    def test_gfs_mixed_accumulation_ranges_are_not_double_counted(self):
+        history={0:np.zeros((2,2))}
+        for previous,source,end,value,expected in (
+            (0,0,3,2,2),(3,0,6,7,5),(6,6,9,3,3),
+            (9,0,12,14,4),(12,9,15,8,5)):
+            segment=advance_gfs_cumulative(
+                history,previous,source,end,np.ones((2,2))*value)
+            np.testing.assert_allclose(segment,expected)
+        np.testing.assert_allclose(history[15],19.)
+
+    def test_gfs_invalid_overlap_fails_closed(self):
+        history={0:np.zeros((2,2))}
+        with self.assertRaises(ValueError):
+            advance_gfs_cumulative(history,3,0,6,np.ones((2,2)))
+        history[3]=np.ones((2,2))*5
+        with self.assertRaises(ValueError):
+            advance_gfs_cumulative(history,3,0,6,np.ones((2,2)))
 
     def test_exact_10_days(self):
         self.assertEqual(DAYS,10)
