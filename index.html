@@ -16,6 +16,18 @@
     figure{margin:0;padding:10px}img{display:block;width:100%;height:auto;background:#fff;border-radius:8px}
     figcaption{padding:10px 6px 4px;color:var(--muted);font-size:14px;text-align:center}
     .en{direction:ltr;unicode-bidi:embed}.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#eaf4fc;color:var(--blue);font-weight:700}
+    #rolling-rain-days{display:flex;gap:8px;overflow-x:auto;padding:12px 14px;scroll-snap-type:x proximity;direction:rtl}
+    #rolling-rain-days button{white-space:nowrap;flex:0 0 auto;border:1px solid #aabed1;border-radius:10px;background:#fff;color:#16476a;font:inherit;font-size:15px;padding:10px 14px;cursor:pointer;scroll-snap-align:start}
+    #rolling-rain-days button[aria-pressed="true"]{background:#086c9a;border-color:#086c9a;color:white;font-weight:700}
+    #rolling-rain-caption,#rolling-rain-status,#rolling-rain-error{padding:10px 16px;font-size:15px}
+    #rolling-rain-error{color:#a02424}
+    #rolling-rain-table{width:calc(100% - 24px);margin:12px;border-collapse:collapse;font-size:clamp(12px,3vw,15px)}
+    #rolling-rain-table th,#rolling-rain-table td{border:1px solid var(--line);padding:8px 5px;text-align:center}
+    #rolling-rain-table thead{background:#eaf4fc}
+    #rolling-rain-status{color:#415c73}
+    .archive-box{border-top:1px solid var(--line);padding:12px}
+    .archive-box summary{cursor:pointer;color:#1769aa;font-weight:700}
+
   </style>
 </head>
 <body>
@@ -24,8 +36,26 @@
     <p>تُحدّث الصفحة تلقائيًا كل 5 دقائق، وتظهر على الخرائط بداية التشغيل ووقت الذروة.</p>
   </header>
   <main>
+    <article id="rolling-rain-card">
+      <h2>مقارنة الأمطار المتجددة لعشرة أيام <span class="badge en">IFS vs GFS</span></h2>
+      <p style="padding:10px 16px;color:var(--muted)">الأوروبي ECMWF والأمريكي GFS من <strong>نفس دورة التشغيل</strong>؛ اختر أحد الأيام العشرة أو مجموع الفترة. كل يوم هنا 24 ساعة بدءًا من دورة النموذج، وليس بالضرورة من منتصف الليل بتوقيت الكويت.</p>
+      <p id="rolling-rain-status" role="status">جارٍ التحقق من بيانات الدورة الفعلية...</p>
+      <div id="rolling-rain-days" role="group" aria-label="اختيار فترة مقارنة الأمطار"></div>
+      <p id="rolling-rain-caption"></p>
+      <figure>
+        <img id="rolling-rain-image" alt="المقارنة اليومية للأمطار بين ECMWF وGFS" hidden>
+        <figcaption>خريطتان بالمقياس اللوني نفسه؛ القيم المتوقعة بالملم وليست أرصادًا أو إنذارًا بالسيول.</figcaption>
+      </figure>
+      <p id="rolling-rain-error" hidden>لا تتوفر حاليًا خريطة قابلة للتحقق. ستبقى الفترة وتاريخ الدورة دون قيم مخترعة.</p>
+      <table id="rolling-rain-table" hidden>
+        <thead><tr><th>المنطقة</th><th>الأوروبي (ملم)</th><th>الأمريكي (ملم)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </article>
     <article>
-      <h2>مقارنة أمطار الأوروبي والأمريكي فوق القيصومة وحفر الباطن والكويت <span class="badge en">ECMWF IFS / NOAA GFS</span></h2>
+      <h2>أرشيف توقعات 10–11 نوفمبر 2026 <span class="badge en">Archived forecast</span></h2>
+      <details class="archive-box">
+        <summary>عرض خرائط الحالة القديمة (ليست متجددة يوميًا)</summary>
       <figure>
         <img data-src="https://raw.githubusercontent.com/rmethen/ECMWF-FFPI-Kuwait/main/output/ECMWF_GFS_RAIN_QAYSUMAH_10_11NOV.png" alt="مقارنة تراكم الأمطار 10 و11 نوفمبر من ECMWF وGFS على المنطقة نفسها">
         <figcaption>مجموع 48 ساعة من 10 نوفمبر 00Z حتى 12 نوفمبر 00Z (3 صباحًا إلى 3 صباحًا بتوقيت الكويت). القيم بالملم عند القيصومة وحفر الباطن ومدينة الكويت. هذه مقارنة نموذجين وليست احتمالًا للسيول.</figcaption>
@@ -38,6 +68,7 @@
         <img data-src="https://raw.githubusercontent.com/rmethen/ECMWF-FFPI-Kuwait/main/output/ECMWF_GFS_RAIN_QAYSUMAH_11NOV.png" alt="مقارنة ECMWF GFS أمطار 11 نوفمبر">
         <figcaption>11 نوفمبر: 24 ساعة متطابقة. DMI يعتمد على الأوروبي في توقعات السعودية، ولذلك لا يُحتسب نموذجًا ثالثًا مستقلًا.</figcaption>
       </figure>
+      </details>
     </article>
     <article>
       <h2>مؤشر السيول المفاجئة <span class="badge en">Flash Flood</span></h2>
@@ -99,6 +130,69 @@
   <script>
     const stamp=Date.now();
     document.querySelectorAll('img[data-src]').forEach(img=>img.src=img.dataset.src+'?v='+stamp);
+    (async function loadRollingRain() {
+      const status=document.getElementById('rolling-rain-status');
+      const buttons=document.getElementById('rolling-rain-days');
+      const image=document.getElementById('rolling-rain-image');
+      const error=document.getElementById('rolling-rain-error');
+      const caption=document.getElementById('rolling-rain-caption');
+      const table=document.getElementById('rolling-rain-table');
+      try {
+        const response=await fetch('output/ECMWF_GFS_ROLLING_10DAY_STATUS.json?v='+stamp,{cache:'no-store'});
+        if(!response.ok) throw new Error('No verified status is published');
+        const data=await response.json();
+        if(!Array.isArray(data.daily_windows)||data.daily_windows.length!==10 ||
+           !data.cycle_utc||!data.generated_utc||!data.cities||!data.total_image)
+          throw new Error('Invalid or incomplete status');
+        const cycle=new Date(data.cycle_utc);
+        const updated=new Date(data.generated_utc);
+        const ageH=(Date.now()-updated.getTime())/3600000;
+        status.textContent='دورة مشتركة: '+cycle.toLocaleString('ar-KW',{timeZone:'UTC',hour12:false})+
+          ' UTC | إنتاج: '+updated.toLocaleString('ar-KW',{timeZone:'Asia/Kuwait'})+
+          ' الكويت'+(ageH>18?' | تحذير: البيانات متأخرة':'');
+        const periods=[{index:0,label:'مجموع 10 أيام',image:data.total_image},...data.daily_windows.map((p,i)=>({
+          index:i+1,label:'اليوم '+(i+1),image:p.image,start:p.start_kuwait,end:p.end_kuwait}))];
+        const permitted=/^ECMWF_GFS_ROLLING_10DAY_(TOTAL|D(?:0[1-9]|10))\.png$/;
+        function selectPeriod(p) {
+          buttons.querySelectorAll('button').forEach(b=>b.setAttribute(
+            'aria-pressed',String(Number(b.dataset.period)===p.index)));
+          const windowText=(p.index===0
+            ? data.daily_windows[0].start_kuwait+' — '+data.daily_windows[9].end_kuwait
+            : p.start+' — '+p.end);
+          caption.textContent=p.label+' | الفترة بتوقيت الكويت: '+windowText;
+          table.querySelector('tbody').replaceChildren();
+          for(const [name,models] of Object.entries(data.cities)) {
+            const row=document.createElement('tr');
+            const valueOf=(label)=>{
+              const m=models[label];
+              const val=p.index===0?m?.total_10d_mm:m?.daily_mm?.[p.index-1];
+              return Number.isFinite(val)?val.toFixed(1):'غير متاح';
+            };
+            for(const cell of [name,valueOf('ECMWF'),valueOf('GFS')]){
+              const td=document.createElement('td');td.textContent=cell;row.appendChild(td);
+            }
+            table.querySelector('tbody').appendChild(row);
+          }
+          table.hidden=false;
+          image.hidden=true;error.hidden=true;
+          if(!permitted.test(p.image)){error.hidden=false;return;}
+          image.onload=()=>{image.hidden=false;error.hidden=true;};
+          image.onerror=()=>{image.hidden=true;error.hidden=false;};
+          image.src='output/'+p.image+'?v='+encodeURIComponent(data.generated_utc);
+        }
+        for(const p of periods){
+          const b=document.createElement('button');
+          b.textContent=p.label;b.type='button';b.dataset.period=String(p.index);
+          b.setAttribute('aria-pressed','false');
+          b.addEventListener('click',()=>selectPeriod(p));
+          buttons.appendChild(b);
+        }
+        selectPeriod(periods[0]);
+      }catch(e){
+        status.textContent='لم تُنشر بعد مقارنة متجددة موثقة للنموذجين؛ الخرائط القديمة في الأرشيف أدناه.';
+        error.hidden=false;image.hidden=true;table.hidden=true;
+      }
+    })();
   </script>
 </body>
 </html>
