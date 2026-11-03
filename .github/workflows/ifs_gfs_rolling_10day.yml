@@ -4,12 +4,14 @@ on:
     branches: [main, feature/rolling-ifs-gfs-10day]
     paths:
       - rolling_ifs_gfs_rain.py
+      - gfs_apcp_rolling.py
       - tests/test_rolling_rain.py
       - index.html
       - .github/workflows/ifs_gfs_rolling_10day.yml
   pull_request:
     paths:
       - rolling_ifs_gfs_rain.py
+      - gfs_apcp_rolling.py
       - tests/test_rolling_rain.py
       - index.html
       - .github/workflows/ifs_gfs_rolling_10day.yml
