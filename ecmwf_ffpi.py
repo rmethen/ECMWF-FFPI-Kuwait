@@ -9,6 +9,7 @@ import cartopy.feature as cfeature
 from scipy.ndimage import label
 from ecmwf.opendata import Client
 from ffpi_cycle import is_newer_cycle, read_previous_cycle, utc_naive
+from ffpi_diagnostics import DIAGNOSTIC_TARGETS, create_diagnostic_maps
 
 
 # =========================================================
@@ -56,10 +57,18 @@ latest_cycle = utc_naive(client.latest(
     param=["tp", "tprate", "ro", "vsw"],
 ))
 previous_cycle = read_previous_cycle(LAST_CYCLE_FILE)
+# Backfill diagnostic images even when the latest full 72h ECMWF cycle
+# is unchanged, but never rewrite charts from a genuinely older cycle.
+diagnostics_missing = any(
+    not (OUTDIR / filename).exists()
+    for _, filename in DIAGNOSTIC_TARGETS.values()
+)
+backfill_diagnostics = latest_cycle == previous_cycle and diagnostics_missing
 print(f"Newest available IFS +72h cycle: {latest_cycle:%Y-%m-%d %HZ}", flush=True)
 print(f"Previously published cycle: {previous_cycle}", flush=True)
-if not is_newer_cycle(latest_cycle, previous_cycle):
-    print("Same/older cycle: keep published maps unchanged, skip download.", flush=True)
+print(f"Missing diagnostic images: {diagnostics_missing}", flush=True)
+if not is_newer_cycle(latest_cycle, previous_cycle) and not backfill_diagnostics:
+    print("Same/older complete cycle: keep published maps unchanged.", flush=True)
     raise SystemExit(0)
 
 result = client.retrieve(
@@ -71,7 +80,9 @@ result = client.retrieve(
 )
 
 run_time = utc_naive(result.datetime)
-if not is_newer_cycle(run_time, previous_cycle):
+if not is_newer_cycle(run_time, previous_cycle) and not (
+    backfill_diagnostics and run_time == previous_cycle
+):
     raise RuntimeError("Download returned an older cycle; refusing to overwrite published maps.")
 if run_time != latest_cycle:
     print(f"NOTICE: latest probe was {latest_cycle}, actual data cycle {run_time}", flush=True)
@@ -287,6 +298,9 @@ ffpi = (
 
 rain_gate = (tp72 >= 10.0) | (max_rate >= 5.0)
 
+# Preserve the unfiltered score for independent, non-warning diagnostics.
+# Keep original FFPI filtering and thresholds exactly as they were.
+unfiltered_ffpi = ffpi.copy(deep=False)
 ffpi = ffpi.where(rain_gate, 0.0)
 
 
@@ -699,6 +713,12 @@ fig_kw.savefig(KUWAIT_ONLY_MAP_FILE, dpi=180, bbox_inches="tight")
 plt.close(fig_kw)
 
 
+
+# Separate, never-gated diagnostic maps for 72h rain, rain rate and FFPI
+# suppression reasons. These do not alter published FFPI calculations.
+create_diagnostic_maps(
+    OUTDIR, run_time, tp72, max_rate, unfiltered_ffpi, rain_gate, ffpi_clean
+)
 
 print("----------------------------------------")
 print("ECMWF FFPI completed successfully")
