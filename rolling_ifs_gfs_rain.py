@@ -17,8 +17,9 @@ from urllib.request import Request, urlopen
 import numpy as np
 
 from compare_ifs_gfs_nov10_11 import (
-    BOUND, CITIES, align_grid, gfs_apcp_url, read_gfs_interval, nearest_cell,
+    BOUND, CITIES, align_grid, gfs_apcp_url, nearest_cell,
 )
+from gfs_apcp_rolling import decode_gfs_apcp, advance_gfs_cumulative
 
 PREFIX = "ECMWF_GFS_ROLLING_10DAY"
 DAYS = 10
@@ -107,29 +108,30 @@ def retrieve_ifs(cycle, target):
 
 
 def retrieve_gfs(cycle):
-    """Download 60 NOAA GRIB intervals and sum each exact 24h day once."""
-    intervals = gfs_intervals()
+    """Download 60 authentic APCP GRIBs; correct variable accumulation ranges."""
+    intervals=gfs_intervals()
     lon0=lat0=None
-    totals=None
+    cumulative={}
+    daily=None
     for k,(start,end) in enumerate(intervals):
         req=Request(
             gfs_apcp_url(cycle,end),
             headers={"User-Agent":"FFPI-rolling-IFS-GFS/1.0 (rainfall experiment)"})
         with urlopen(req,timeout=75) as res:
-            raw=res.read()
-        lon,lat,field=read_gfs_interval(raw,start,end)
-        if totals is None:
+            data=res.read()
+        source_start,lon,lat,rain=decode_gfs_apcp(data,end)
+        if daily is None:
             lon0,lat0=lon,lat
-            totals=[np.zeros_like(field,dtype=float) for _ in range(DAYS)]
-        if (field.shape != totals[0].shape or
-            not np.array_equal(lon,lon0) or not np.array_equal(lat,lat0)):
+            daily=[np.zeros_like(rain,dtype=float) for _ in range(DAYS)]
+            cumulative[0]=np.zeros_like(rain,dtype=float)
+        if (rain.shape!=daily[0].shape or not np.array_equal(lon,lon0)
+            or not np.array_equal(lat,lat0)):
             raise ValueError(f"GFS grid mismatch at +{end}")
-        if not np.isfinite(field).all() or (field < -0.001).any():
-            raise ValueError(f"Invalid NOAA rain at +{end}")
-        totals[start//24]+=np.maximum(0,field)
+        segment=advance_gfs_cumulative(cumulative,start,source_start,end,rain)
+        daily[start//24]+=segment
         if (k+1)%10==0:
             print(f"Verified {k+1}/{len(intervals)} GFS APCP intervals",flush=True)
-    return lon0,lat0,totals
+    return lon0,lat0,daily
 
 
 def same_window_details(cycle):
@@ -248,7 +250,7 @@ def main(now=None, outdir=OUTDIR):
                             headers={"User-Agent":"FFPI-rolling-IFS-GFS/1.0"})
                 with urlopen(req,timeout=75) as response:
                     final_blob=response.read()
-                read_gfs_interval(final_blob,last_start,last_end)
+                decode_gfs_apcp(final_blob,last_end)
                 lon_e,lat_e,arr_e=retrieve_ifs(cycle,folder/"ifs_rolling_tp.grib2")
                 lon_g,lat_g,arr_g=retrieve_gfs(cycle)
                 ec=align_grid(lon_e,lat_e,arr_e)
