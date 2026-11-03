@@ -22,6 +22,11 @@ class CycleFreshnessTests(unittest.TestCase):
     def test_timezone_aware_cycle(self):
         self.assertEqual(utc_naive(datetime(2026, 11, 3, 3, tzinfo=timezone(timedelta(hours=3)))), datetime(2026, 11, 3, 0))
 
+    def test_same_cycle_in_different_timezones_is_not_new(self):
+        kuwait_time = datetime(2026, 11, 2, 21, tzinfo=timezone(timedelta(hours=3)))
+        utc_time = datetime(2026, 11, 2, 18)
+        self.assertFalse(is_newer_cycle(kuwait_time, utc_time))
+
     def test_read_marker_and_missing_marker(self):
         with tempfile.TemporaryDirectory() as temp:
             marker = Path(temp) / "last_run.txt"
