@@ -2,8 +2,19 @@ name: ECMWF FFPI Kuwait
 
 on:
   workflow_dispatch:
+  # Temporary branch-only smoke test; removed before proposing merge.
+  push:
+    branches:
+      - test/ffpi-freshness-20261103
+    paths:
+      - ecmwf_ffpi.py
+      - ffpi_cycle.py
+      - tests/test_ffpi_cycle.py
+      - .github/workflows/ecmwf_ffpi.yml
+  # ECMWF Open Data typically follows a 7-9h dissemination lag.
+  # Try after release, then retry one hour later if the cycle is late.
   schedule:
-    - cron: "30 0,6,12,18 * * *"
+    - cron: "47 3,4,9,10,15,16,21,22 * * *"
 
 permissions:
   contents: write
@@ -24,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: |
           pip install numpy pandas xarray cfgrib eccodes matplotlib cartopy scipy requests ecmwf-opendata
+
+      - name: Unit test cycle freshness
+        run: python -m unittest discover -s tests -v
 
       - name: Run ECMWF FFPI
         run: python ecmwf_ffpi.py
