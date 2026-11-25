@@ -1,6 +1,6 @@
 {
-  "cycle_utc": "2026-11-24T12:00:00Z",
-  "generated_utc": "2026-11-24T20:07:12.201450Z",
+  "cycle_utc": "2026-11-25T00:00:00Z",
+  "generated_utc": "2026-11-25T18:09:38.690376Z",
   "model_count": 2,
   "models": [
     "ECMWF IFS 0.25deg",
@@ -10,82 +10,82 @@
   "daily_windows": [
     {
       "index": 1,
-      "start_utc": "2026-11-24T12:00:00Z",
-      "end_utc": "2026-11-25T12:00:00Z",
-      "start_kuwait": "2026-11-24 15:00",
-      "end_kuwait": "2026-11-25 15:00",
+      "start_utc": "2026-11-25T00:00:00Z",
+      "end_utc": "2026-11-26T00:00:00Z",
+      "start_kuwait": "2026-11-25 03:00",
+      "end_kuwait": "2026-11-26 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D01.png"
     },
     {
       "index": 2,
-      "start_utc": "2026-11-25T12:00:00Z",
-      "end_utc": "2026-11-26T12:00:00Z",
-      "start_kuwait": "2026-11-25 15:00",
-      "end_kuwait": "2026-11-26 15:00",
+      "start_utc": "2026-11-26T00:00:00Z",
+      "end_utc": "2026-11-27T00:00:00Z",
+      "start_kuwait": "2026-11-26 03:00",
+      "end_kuwait": "2026-11-27 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D02.png"
     },
     {
       "index": 3,
-      "start_utc": "2026-11-26T12:00:00Z",
-      "end_utc": "2026-11-27T12:00:00Z",
-      "start_kuwait": "2026-11-26 15:00",
-      "end_kuwait": "2026-11-27 15:00",
+      "start_utc": "2026-11-27T00:00:00Z",
+      "end_utc": "2026-11-28T00:00:00Z",
+      "start_kuwait": "2026-11-27 03:00",
+      "end_kuwait": "2026-11-28 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D03.png"
     },
     {
       "index": 4,
-      "start_utc": "2026-11-27T12:00:00Z",
-      "end_utc": "2026-11-28T12:00:00Z",
-      "start_kuwait": "2026-11-27 15:00",
-      "end_kuwait": "2026-11-28 15:00",
+      "start_utc": "2026-11-28T00:00:00Z",
+      "end_utc": "2026-11-29T00:00:00Z",
+      "start_kuwait": "2026-11-28 03:00",
+      "end_kuwait": "2026-11-29 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D04.png"
     },
     {
       "index": 5,
-      "start_utc": "2026-11-28T12:00:00Z",
-      "end_utc": "2026-11-29T12:00:00Z",
-      "start_kuwait": "2026-11-28 15:00",
-      "end_kuwait": "2026-11-29 15:00",
+      "start_utc": "2026-11-29T00:00:00Z",
+      "end_utc": "2026-11-30T00:00:00Z",
+      "start_kuwait": "2026-11-29 03:00",
+      "end_kuwait": "2026-11-30 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D05.png"
     },
     {
       "index": 6,
-      "start_utc": "2026-11-29T12:00:00Z",
-      "end_utc": "2026-11-30T12:00:00Z",
-      "start_kuwait": "2026-11-29 15:00",
-      "end_kuwait": "2026-11-30 15:00",
+      "start_utc": "2026-11-30T00:00:00Z",
+      "end_utc": "2026-12-01T00:00:00Z",
+      "start_kuwait": "2026-11-30 03:00",
+      "end_kuwait": "2026-12-01 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D06.png"
     },
     {
       "index": 7,
-      "start_utc": "2026-11-30T12:00:00Z",
-      "end_utc": "2026-12-01T12:00:00Z",
-      "start_kuwait": "2026-11-30 15:00",
-      "end_kuwait": "2026-12-01 15:00",
+      "start_utc": "2026-12-01T00:00:00Z",
+      "end_utc": "2026-12-02T00:00:00Z",
+      "start_kuwait": "2026-12-01 03:00",
+      "end_kuwait": "2026-12-02 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D07.png"
     },
     {
       "index": 8,
-      "start_utc": "2026-12-01T12:00:00Z",
-      "end_utc": "2026-12-02T12:00:00Z",
-      "start_kuwait": "2026-12-01 15:00",
-      "end_kuwait": "2026-12-02 15:00",
+      "start_utc": "2026-12-02T00:00:00Z",
+      "end_utc": "2026-12-03T00:00:00Z",
+      "start_kuwait": "2026-12-02 03:00",
+      "end_kuwait": "2026-12-03 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D08.png"
     },
     {
       "index": 9,
-      "start_utc": "2026-12-02T12:00:00Z",
-      "end_utc": "2026-12-03T12:00:00Z",
-      "start_kuwait": "2026-12-02 15:00",
-      "end_kuwait": "2026-12-03 15:00",
+      "start_utc": "2026-12-03T00:00:00Z",
+      "end_utc": "2026-12-04T00:00:00Z",
+      "start_kuwait": "2026-12-03 03:00",
+      "end_kuwait": "2026-12-04 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D09.png"
     },
     {
       "index": 10,
-      "start_utc": "2026-12-03T12:00:00Z",
-      "end_utc": "2026-12-04T12:00:00Z",
-      "start_kuwait": "2026-12-03 15:00",
-      "end_kuwait": "2026-12-04 15:00",
+      "start_utc": "2026-12-04T00:00:00Z",
+      "end_utc": "2026-12-05T00:00:00Z",
+      "start_kuwait": "2026-12-04 03:00",
+      "end_kuwait": "2026-12-05 03:00",
       "image": "ECMWF_GFS_ROLLING_10DAY_D10.png"
     }
   ],
@@ -99,13 +99,13 @@
           0.0,
           0.0,
           0.0,
+          0.0,
+          7.1,
           0.5,
-          4.9,
-          2.0,
           0.0,
           0.0
         ],
-        "total_10d_mm": 7.3
+        "total_10d_mm": 7.6
       },
       "GFS": {
         "daily_mm": [
@@ -114,13 +114,13 @@
           0.0,
           0.0,
           0.0,
-          0.0,
+          0.1,
+          1.4,
           0.4,
-          9.4,
-          0.9,
-          32.5
+          1.4,
+          0.0
         ],
-        "total_10d_mm": 43.2
+        "total_10d_mm": 3.2
       }
     },
     "Hafar Al Batin": {
@@ -131,13 +131,13 @@
           0.0,
           0.0,
           0.0,
-          1.2,
-          13.9,
-          2.0,
+          2.2,
+          9.3,
+          0.5,
           0.0,
           0.0
         ],
-        "total_10d_mm": 17.1
+        "total_10d_mm": 12.0
       },
       "GFS": {
         "daily_mm": [
@@ -147,12 +147,12 @@
           0.0,
           0.0,
           0.0,
+          4.4,
           0.2,
-          4.0,
-          1.3,
-          6.6
+          1.7,
+          0.0
         ],
-        "total_10d_mm": 12.2
+        "total_10d_mm": 6.3
       }
     },
     "Kuwait City": {
@@ -163,13 +163,13 @@
           0.0,
           0.0,
           0.0,
-          0.0,
-          2.9,
-          2.7,
-          0.0,
+          0.2,
+          3.2,
+          0.5,
+          0.2,
           0.0
         ],
-        "total_10d_mm": 5.6
+        "total_10d_mm": 4.2
       },
       "GFS": {
         "daily_mm": [
@@ -179,12 +179,12 @@
           0.0,
           0.0,
           0.0,
-          0.1,
-          4.4,
-          0.4,
-          16.8
+          6.9,
+          0.9,
+          6.4,
+          0.0
         ],
-        "total_10d_mm": 21.8
+        "total_10d_mm": 14.3
       }
     }
   },
